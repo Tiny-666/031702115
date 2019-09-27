@@ -54,7 +54,7 @@ void GetName()//获取姓名并输出到中间文件
 }
 void GetPhoneNumber()//获取电话号并输入到中间文件
 {
-	int i = 0, count = 0, StartPos = 0, EndPos = 0, flag = 0, maxlength = 0;
+	int i = 0, count = 0, StartPos = 0, EndPos = 0, flag = 0;
 	for (i = 2; str[i] != '\0'; i++)
 	{
 		if (str[i] >= '0' && str[i] <= '9')//找到数字
@@ -70,8 +70,6 @@ void GetPhoneNumber()//获取电话号并输入到中间文件
 				EndPos = i;
 				break;
 			}
-			if (count > maxlength)
-				maxlength = count;
 		}
 		else//非数字
 		{
@@ -79,18 +77,8 @@ void GetPhoneNumber()//获取电话号并输入到中间文件
 			count = 0;
 		}
 	}
-	if (EndPos != 0)
-	{
-		Fout << "\t\t\"手机\": " << "\"" << str.substr(StartPos, EndPos - StartPos + 1) << "\"," << endl;
-		str.erase(StartPos, EndPos - StartPos + 1);//写入后立刻删除，以便后面的处理（删除了其中的电话号）
-	}
-	else//异常处理
-	{
-		Fout << "\t\t\"手机\": " << "\"未能找到正常手机号码\"," << endl;
-		if (maxlength < 11)
-			str.erase(StartPos, maxlength);//删除异常手机号，使得后面能提取正确地址
-	}
-	//Fout << str << endl;
+	Fout << "\t\t\"手机\": " << "\"" << str.substr(StartPos, EndPos - StartPos + 1) << "\"," << endl;
+	str.erase(StartPos, EndPos - StartPos + 1);//写入后立刻删除，以便后面的处理（删除了其中的电话号）
 }
 void GetMore()//更多细节提取，输入到中间文件
 {
@@ -229,7 +217,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	//街道/镇/乡(乡镇级)提取——————————————————————————————————//
 	size_t position1 = 0, position2 = 0, position3 = 0, position4 = 0;
 	position1 = str.find("镇");
-	position2 = str.find("街道");
+	position2 = str.find("街");
 	position3 = str.find("乡");
 	//position4 = str.find("道");
 	if (position1 != str.npos)
@@ -239,8 +227,8 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	}
 	else if (position2 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position2 + 2) << "\"," << endl;
-		str.erase(2, position2 + 2);
+		Fout << "\t\t\t\"" << str.substr(2, position2) << "\"," << endl;
+		str.erase(2, position2);
 	}
 	else if (position3 != str.npos)
 	{
@@ -265,7 +253,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	Fout << "\t\t\t\"" << str << "\"" << endl;
 	Fout << "\t\t]\n\t}";
 }
-int main(int argv, char** argc)//"TEST.txt""output.txt"
+int main(int argv, char** argc)//"TEST.txt""output.json"
 {
 	ifstream in(argc[1]);//输入文件，该文件为utf-8编码格式
 	Fout << '[' << endl;
