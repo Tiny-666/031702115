@@ -95,10 +95,12 @@ void GetPhoneNumber()//获取电话号并输入到中间文件
 void GetMore()//更多细节提取，输入到中间文件
 {
 	//路、街、巷名提取—————————————————————————————————————————//
-	size_t position1 = 0, position2 = 0, position3 = 0;
+	size_t position1 = 0, position2 = 0, position3 = 0, position4 = 0, position5 = 0;
 	position1 = str.find("路");
 	position2 = str.find("街");
 	position3 = str.find("巷");
+	position4 = str.find("村");
+	position5 = str.find("道");
 	if (position1 != str.npos)
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position1) << "\"," << endl;
@@ -113,6 +115,16 @@ void GetMore()//更多细节提取，输入到中间文件
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
 		str.erase(2, position3);
+	}
+	else if (position4 != str.npos)
+	{
+		Fout << "\t\t\t\"" << str.substr(2, position4) << "\"," << endl;
+		str.erase(2, position4);
+	}
+	else if (position5 != str.npos)
+	{
+		Fout << "\t\t\t\"" << str.substr(2, position5) << "\"," << endl;
+		str.erase(2, position5);
 	}
 	else
 		Fout << "\t\t\t\"\"," << endl;
@@ -215,10 +227,11 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	//县提取完毕————————————————————————————————————————//
 	//
 	//街道/镇/乡(乡镇级)提取——————————————————————————————————//
-	size_t position1 = 0, position2 = 0, position3 = 0;
+	size_t position1 = 0, position2 = 0, position3 = 0, position4 = 0;
 	position1 = str.find("镇");
 	position2 = str.find("街道");
 	position3 = str.find("乡");
+	position4 = str.find("道");
 	if (position1 != str.npos)
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position1) << "\"," << endl;
@@ -233,6 +246,11 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
 		str.erase(2, position3);
+	}
+	else if (position4 != str.npos)
+	{
+		Fout << "\t\t\t\"" << str.substr(2, position4) << "\"," << endl;
+		str.erase(2, position4);
 	}
 	else
 		Fout << "\t\t\t\"\"," << endl;
