@@ -85,7 +85,7 @@ void GetMore()//更多细节提取，输入到中间文件
 	//路、街、巷名提取—————————————————————————————————————————//
 	size_t position1 = 0, position2 = 0, position3 = 0, position4 = 0, position5 = 0;
 	position1 = str.find("路");
-	//position2 = str.find("街");
+	position2 = str.find("街");
 	//position3 = str.find("巷");
 	position4 = str.find("村");
 	position5 = str.find("道");
@@ -98,12 +98,12 @@ void GetMore()//更多细节提取，输入到中间文件
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position2) << "\"," << endl;
 		str.erase(2, position2);
-	}
+	}*/
 	else if (position3 != str.npos)
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
 		str.erase(2, position3);
-	}*/
+	}
 	else if (position4 != str.npos)
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position4) << "\"," << endl;
