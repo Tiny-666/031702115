@@ -47,7 +47,7 @@ void GetName()//获取姓名并输出到中间文件
 	for (i = 0; str[i] != ','; i++);
 	int EndPos = i;
 	Fout << "    {" << endl;
-	Fout << "        \"level\":" << str[0] << "," << endl;
+	//Fout << "        \"level\":" << str[0] << "," << endl;
 	Fout << "        \"姓名\": " << "\"" << str.substr(2, EndPos - 2) << "\"," << endl;
 	str.erase(2, EndPos - 1);//写入后立刻删除，以便后面的处理（删除了名字以及后面的逗号）
 	//Fout << str << endl;
