@@ -149,11 +149,11 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 		{
 			Province_Exist = 1;
 			Fout << "\t\t\t\"" << temp << "\"," << endl;
-			int EndPos = 0, i = 2;
-			for (; str[i] == temp[i - 2]; i++);
-			EndPos = i;//截取
-			str.erase(2, EndPos - 2);//写入后立即删除，以便后面处理（省）
-			//Fout << str;
+			int i = 2;
+			str.erase(2, 4);//先删除前两个字
+			if (str.substr(2, 2) == "省" || str.substr(2, 2) == "市")//判断后面一个字是否是“省”或者“市”
+				str.erase(2, 2);//如果是，就删除
+				//Fout << str;
 		}
 		if (Province_Exist)
 			break;
@@ -164,27 +164,30 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	//省提取完毕————————————————————————————————————————//
 	//
 	//市级的提取————————————————————————————————————————//
-	ifstream city("city.txt");//打开市级表
-	int City_Exist = 0;
-	while (getline(city, temp))//提取市
+	if (!Special)
 	{
-		temp = Utf8ToGbk(temp.c_str());
-		if (str.substr(2, 4) == temp.substr(0, 4))
+		ifstream city("city.txt");//打开市级表
+		int City_Exist = 0;
+		while (getline(city, temp))//提取市
 		{
-			City_Exist = 1;
-			Fout << "\t\t\t\"" << temp << "\"," << endl;
-			int EndPos = 0, i = 2;
-			for (; str[i] == temp[i - 2]; i++);
-			EndPos = i;//截取
-			str.erase(2, EndPos - 2);//写入后立即删除，以便后面处理（市）
-			//Fout << str<<endl;
+			temp = Utf8ToGbk(temp.c_str());
+			if (str.substr(2, 4) == temp.substr(0, 4))
+			{
+				City_Exist = 1;
+				Fout << "\t\t\t\"" << temp << "\"," << endl;
+				int EndPos = 0, i = 2;
+				for (; str[i] == temp[i - 2]; ++i);
+				EndPos = i;//截取
+				str.erase(2, EndPos - 2);//写入后立即删除，以便后面处理（市）
+				//Fout << str<<endl;
+			}
+			if (City_Exist)
+				break;
 		}
-		if (City_Exist)
-			break;
+		if (!Special && !City_Exist)
+			Fout << "\t\t\t\"\"," << endl;
+		city.close();
 	}
-	if (!Special && !City_Exist)
-		Fout << "\t\t\t\"\"," << endl;
-	city.close();
 	//市提取完毕————————————————————————————————————————//
 	//
 	//县级的提取————————————————————————————————————————//
@@ -198,7 +201,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 			County_Exist = 1;
 			Fout << "\t\t\t\"" << temp << "\"," << endl;
 			int EndPos = 0, i = 2;
-			for (; str[i] == temp[i - 2]; i++);
+			for (; str[i] == temp[i - 2]; ++i);
 			EndPos = i;//截取
 			str.erase(2, EndPos - 2);//写入后立即删除，以便后面处理（县）
 		}
@@ -244,7 +247,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	Fout << "\t\t\t\"" << str << "\"" << endl;
 	Fout << "\t\t]\n\t}";
 }
-int main(int argv, char** argc)//"TEST.txt""output.json"
+int main(int argv, char** argc)//"TEST.txt""output.txt"
 {
 	ifstream in(argc[1]);//输入文件，该文件为utf-8编码格式
 	Fout << '[' << endl;
