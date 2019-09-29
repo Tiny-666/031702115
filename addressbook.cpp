@@ -153,7 +153,13 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 			str.erase(2, 4);//先删除前两个字
 			if (str.substr(2, 2) == "省" || str.substr(2, 2) == "市")//判断后面一个字是否是“省”或者“市”
 				str.erase(2, 2);//如果是，就删除
-				//Fout << str;
+			else
+			{
+				size_t Position = str.find("自治区");
+				if (Position != str.npos)
+					str.erase(2, Position + 4);
+			}
+			//Fout << str;
 		}
 		if (Province_Exist)
 			break;
@@ -219,8 +225,8 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	position1 = str.find("镇");
 	position2 = str.find("街道");
 	position3 = str.find("乡");
-	//position4 = str.find("道");
-	if (position1 != str.npos)
+	position4 = str.find("合作区");
+	if (position1 != str.npos && position1 < 10)
 	{
 		Fout << "\t\t\t\"" << str.substr(2, position1) << "\"," << endl;
 		str.erase(2, position1);
@@ -235,11 +241,11 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
 		str.erase(2, position3);
 	}
-	/*else if (position4 != str.npos)
+	else if (position4 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position4) << "\"," << endl;
-		str.erase(2, position4);
-	}*/
+		Fout << "\t\t\t\"" << str.substr(2, position4 + 4) << "\"," << endl;
+		str.erase(2, position4 + 4);
+	}
 	else
 		Fout << "\t\t\t\"\"," << endl;
 	//街道/镇/乡(乡镇级)提取完毕————————————————————————————————//
@@ -253,9 +259,9 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	Fout << "\t\t\t\"" << str << "\"" << endl;
 	Fout << "\t\t]\n\t}";
 }
-int main(int argv, char** argc)//"TEST.txt""output.json"
+int main(int argv, char** argc)//argc[1]argc[2]
 {
-	ifstream in(argc[1]);//输入文件，该文件为utf-8编码格式
+	ifstream in("TEST.txt");//输入文件，该文件为utf-8编码格式
 	Fout << '[' << endl;
 	while (getline(in, str))//读取一行，并将utf-8编码转换为gbk，此时str为gbk编码
 	{
@@ -270,7 +276,7 @@ int main(int argv, char** argc)//"TEST.txt""output.json"
 	in.close();
 	Fout.close();
 	ifstream FIN("temp.txt");
-	ofstream FOUT(argc[2]);
+	ofstream FOUT("output.json");
 	while (getline(FIN, str))
 	{
 		str = GbkToUtf8(str.c_str());
