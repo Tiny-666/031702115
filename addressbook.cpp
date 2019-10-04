@@ -1,7 +1,4 @@
-﻿// addressbook.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include <string>
+﻿#include <string>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -46,11 +43,11 @@ void GetName()//获取姓名并输出到中间文件
 	int i = 0;
 	for (i = 0; str[i] != ','; i++);
 	int EndPos = i;
-	Fout << "\t{" << endl;
-	Fout << "\t\t\"level\":" << str[0] << "," << endl;
-	Fout << "\t\t\"姓名\": " << "\"" << str.substr(2, EndPos - 2) << "\"," << endl;
+	Fout << "{";
+	Fout << "\"level\":" << str[0] << ",";
+	Fout << "\"姓名\": " << "\"" << str.substr(2, EndPos - 2) << "\",";
 	str.erase(2, EndPos - 1);//写入后立刻删除，以便后面的处理（删除了名字以及后面的逗号）
-	//Fout << str << endl;
+	//Fout << str ;
 }
 void GetPhoneNumber()//获取电话号并输入到中间文件
 {
@@ -77,7 +74,7 @@ void GetPhoneNumber()//获取电话号并输入到中间文件
 			count = 0;
 		}
 	}
-	Fout << "\t\t\"手机\": " << "\"" << str.substr(StartPos, EndPos - StartPos + 1) << "\"," << endl;
+	Fout << "\"手机\": " << "\"" << str.substr(StartPos, EndPos - StartPos + 1) << "\",";
 	str.erase(StartPos, EndPos - StartPos + 1);//写入后立刻删除，以便后面的处理（删除了其中的电话号）
 }
 void GetMore()//更多细节提取，输入到中间文件
@@ -91,54 +88,54 @@ void GetMore()//更多细节提取，输入到中间文件
 	position5 = str.find("道");
 	if (position1 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position1) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position1) << "\",";
 		str.erase(2, position1);
 	}
 	else if (position2 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position2) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position2) << "\",";
 		str.erase(2, position2);
 	}
 	else if (position3 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position3) << "\",";
 		str.erase(2, position3);
 	}
 	else if (position4 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position4) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position4) << "\",";
 		str.erase(2, position4);
 	}
 	else if (position5 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position5) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position5) << "\",";
 		str.erase(2, position5);
 	}
 	else
-		Fout << "\t\t\t\"\"," << endl;
+		Fout << "\"\",";
 	//路、街、巷名提取完毕———————————————————————————————————————//
 	//门牌号提取————————————————————————————————————————————//
 	size_t position = 0;
 	position = str.find("号");
 	if (position != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position) << "\",";
 		str.erase(2, position);
 	}
 	else
-		Fout << "\t\t\t\"\"," << endl;
+		Fout << "\"\",";
 	//门牌号提取完毕——————————————————————————————————————————//
 }
 void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编码格式
 {
 	//省份的提取————————————————————————————————————————//
 	ifstream prov("Province.txt");//打开省份表,需要将utf-8格式转换为gbk
-	Fout << "\t\t\"地址\": " << "[" << endl;
+	Fout << "\"地址\": " << "[";
 	int Special = 0;
 	if (str.substr(2, 4) == "北京" || str.substr(2, 4) == "天津" || str.substr(2, 4) == "上海" || str.substr(2, 4) == "重庆")
 	{//四个直辖市
 		Special = 1;
-		Fout << "\t\t\t\"" << str.substr(2, 4) << "\"," << endl;
+		Fout << "\"" << str.substr(2, 4) << "\",";
 	}
 	string temp;//临时字符串（存表的每一行，用于比较）
 	int Province_Exist = 0;
@@ -148,7 +145,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 		if (str.substr(2, 4) == temp.substr(0, 4))
 		{
 			Province_Exist = 1;
-			Fout << "\t\t\t\"" << temp << "\"," << endl;
+			Fout << "\"" << temp << "\",";
 			int i = 2;
 			str.erase(2, 4);//先删除前两个字
 			if (str.substr(2, 2) == "省" || str.substr(2, 2) == "市")//判断后面一个字是否是“省”或者“市”
@@ -165,7 +162,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 			break;
 	}
 	if (!Province_Exist)
-		Fout << "\t\t\t\"\"," << endl;
+		Fout << "\"\",";
 	prov.close();
 	//省提取完毕————————————————————————————————————————//
 	//
@@ -180,7 +177,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 			if (str.substr(2, 4) == temp.substr(0, 4))
 			{
 				City_Exist = 1;
-				Fout << "\t\t\t\"" << temp << "\"," << endl;
+				Fout << "\"" << temp << "\",";
 				int EndPos = 0, i = 2;
 				for (; str[i] == temp[i - 2]; ++i);
 				EndPos = i;//截取
@@ -191,7 +188,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 				break;
 		}
 		if (!Special && !City_Exist)
-			Fout << "\t\t\t\"\"," << endl;
+			Fout << "\"\",";
 		city.close();
 	}
 	//市提取完毕————————————————————————————————————————//
@@ -205,7 +202,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 		if (str.substr(2, 4) == temp.substr(0, 4))
 		{
 			County_Exist = 1;
-			Fout << "\t\t\t\"" << temp << "\"," << endl;
+			Fout << "\"" << temp << "\",";
 			int EndPos = 0, i = 2;
 			for (; str[i] == temp[i - 2]; ++i);
 			EndPos = i;//截取
@@ -215,7 +212,7 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 			break;
 	}
 	if (!County_Exist)
-		Fout << "\t\t\t\"\"," << endl;
+		Fout << "\"\",";
 	//Fout << str;
 	county.close();
 	//县提取完毕————————————————————————————————————————//
@@ -228,26 +225,26 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	position4 = str.find("合作区");
 	if (position1 != str.npos && position1 < 10)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position1) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position1) << "\",";
 		str.erase(2, position1);
 	}
 	else if (position2 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position2 + 2) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position2 + 2) << "\",";
 		str.erase(2, position2 + 2);
 	}
 	else if (position3 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position3) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position3) << "\",";
 		str.erase(2, position3);
 	}
 	else if (position4 != str.npos)
 	{
-		Fout << "\t\t\t\"" << str.substr(2, position4 + 4) << "\"," << endl;
+		Fout << "\"" << str.substr(2, position4 + 4) << "\",";
 		str.erase(2, position4 + 4);
 	}
 	else
-		Fout << "\t\t\t\"\"," << endl;
+		Fout << "\"\",";
 	//街道/镇/乡(乡镇级)提取完毕————————————————————————————————//
 	//
 	//等级判别↓//
@@ -256,12 +253,12 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	//判别完毕，删除↓//
 	str.erase(0, 2);
 	str.erase(str.length() - 1, 1);
-	Fout << "\t\t\t\"" << str << "\"" << endl;
-	Fout << "\t\t]\n\t}";
+	Fout << "\"" << str << "\"";
+	Fout << "]}";
 }
-int main(int argv, char** argc)//"TEST.txt""output.json"
+int main(int argv, char** argc)//argc[1]argc[2]
 {
-	ifstream in(argc[1]);//输入文件，该文件为utf-8编码格式
+	ifstream in("input.txt");//输入文件，该文件为utf-8编码格式
 	Fout << '[' << endl;
 	while (getline(in, str))//读取一行，并将utf-8编码转换为gbk，此时str为gbk编码
 	{
@@ -276,13 +273,13 @@ int main(int argv, char** argc)//"TEST.txt""output.json"
 	in.close();
 	Fout.close();
 	ifstream FIN("temp.txt");
-	ofstream FOUT(argc[2]);
+	ofstream FOT("031702115.txt");
 	while (getline(FIN, str))
 	{
 		str = GbkToUtf8(str.c_str());
-		FOUT << str << endl;
+		FOT << str << endl;
 	}
 	FIN.close();
-	FOUT.close();
+	FOT.close();
 	return 0;
 }
