@@ -256,9 +256,9 @@ void GetAddress()//基本提取，过程中的temp字符串需要转换为gbk编
 	Fout << "\"" << str << "\"";
 	Fout << "]}";
 }
-int main(int argv, char** argc)//argc[1]argc[2]
+int main(int argv, char** argc)//input.txt031702115.txt
 {
-	ifstream in("input.txt");//输入文件，该文件为utf-8编码格式
+	ifstream in(argc[1]);//输入文件，该文件为utf-8编码格式
 	Fout << '[' << endl;
 	while (getline(in, str))//读取一行，并将utf-8编码转换为gbk，此时str为gbk编码
 	{
@@ -273,7 +273,7 @@ int main(int argv, char** argc)//argc[1]argc[2]
 	in.close();
 	Fout.close();
 	ifstream FIN("temp.txt");
-	ofstream FOT("031702115.txt");
+	ofstream FOT(argc[2]);
 	while (getline(FIN, str))
 	{
 		str = GbkToUtf8(str.c_str());
