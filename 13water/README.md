@@ -1,5 +1,5 @@
 # 13water
-![](https://img.shields.io/badge/language-JAVA-orange.svg)
+![](https://img.shields.io/badge/language-JAVA-green.svg)
 
 ## 运行环境:
 win10；JDK版本：12.0.2
